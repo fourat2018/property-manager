@@ -21,8 +21,8 @@ class PropertyRouter @Inject()(controller: PropertyController) extends SimpleRou
   override def routes: Routes = {
 
     //properties API
-    case GET(p"/") =>
-      controller.listProperties()
+    case POST(p"/") =>
+      controller.createProperty()
 //
 //    case GET(p"/$propertyId") =>
 //      controller.retrieveProperty(propertyId.toLong)

@@ -1,11 +1,15 @@
 package v1.properties
 
-import javax.inject.{Inject, Provider}
+import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.MarkerContext
 
-import scala.concurrent.{ExecutionContext, Future}
-import play.api.libs.json._
+
+import javax.inject.{Inject, Provider}
+
+import v1.properties.forms.PropertyFormInput
+
+
 
 
 
@@ -15,6 +19,10 @@ import play.api.libs.json._
 class PropertyResourceHandler @Inject()(
     routerProvider: Provider[PropertyRouter],
     propertyRepository: PropertyRepository)(implicit ec: ExecutionContext) {
+
+  def createProperty(propertyInput: PropertyFormInput)(implicit mc: MarkerContext): Future[Int] = {
+    Future{1}
+  }
 
 
 }

@@ -16,6 +16,8 @@ import v1.properties.forms.PropertyFormInput
 
 
 final case class PropertyData(id: Long, address: String, postCode: String,latitude:Double,longitude:Double,bedroomCount:Option[Int],surface:Option[Double])
+final case class PriceData(id:Long, price: Double,date:Date,propertyId: Long)
+
 
 
 
@@ -50,6 +52,7 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
   import profile.api._
 
 
+// properties table mapping
   private class PropertyTable(tag: Tag) extends Table[PropertyData](tag, "properties") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -66,9 +69,28 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
 
     def surface = column[Option[Double]]{"surface"}
 
-
-
     def * = (id, address, postcode,latitude,longitude,bedroomCount,surface) <> ((PropertyData.apply _).tupled, PropertyData.unapply)
+  }
+
+
+  // list of properties
+  private val properties = TableQuery[PropertyTable]
+
+  // prices table mapping
+  private class PricesTable(tag: Tag) extends Table[PriceData](tag, "prices") {
+
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+    def price = column[Double]("price")
+
+    def date = column[Date]("date")
+
+    def propertyId = column[Long]("property_id")
+
+    def property =  foreignKey("property_fk", propertyId, properties)(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
+
+
+    def * = (id, price, date,propertyId) <> ((PriceData.apply _).tupled, PriceData.unapply )
   }
 
 

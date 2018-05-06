@@ -9,7 +9,7 @@ import play.api.routing.sird._
 /**
   * Routes and URLs to the PropertyResource controller.
   */
-class PropertytRouter @Inject()(controller: PropertyController) extends SimpleRouter {
+class PropertyRouter @Inject()(controller: PropertyController) extends SimpleRouter {
   val prefix = "/v1/properties"
 
   def link(id: Long): String = {
@@ -20,6 +20,29 @@ class PropertytRouter @Inject()(controller: PropertyController) extends SimpleRo
 
   override def routes: Routes = {
 
+    //properties API
+    case GET(p"/") =>
+      controller.listProperties()
+//
+//    case GET(p"/$propertyId") =>
+//      controller.retrieveProperty(propertyId.toLong)
+//
+//    case POST(p"/") =>
+//      controller.createProperty()
+//
+//    case DELETE(p"/$propertyId") =>
+//      controller.removeProperty(propertyId.toLong)
+//
+//    case PATCH((p"/$propertyId")) =>
+//      controller.updateProperty(propertyId.toLong)
+//
+//
+//    //Price Resource API
+//    case GET(p"/$propertyId/prices" ) =>
+//      controller.listPropertyPrices(propertyId.toLong)
+//
+//    case POST(p"/$propertyId/prices") =>
+//      controller.addPropertyPrice(propertyId.toLong)
 
 
 

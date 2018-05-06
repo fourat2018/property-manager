@@ -10,6 +10,7 @@ import java.sql.Date
 
 import slick.jdbc.JdbcProfile
 
+import scala.concurrent.Future
 
 import v1.properties.forms.PropertyFormInput
 
@@ -27,7 +28,7 @@ class PropertyExecutionContext @Inject()(actorSystem: ActorSystem) extends Custo
 
 trait PropertyRepository {
 
-//  def createProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData]
+  def createProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData]
 //
 //  def listProperties()(implicit mc: MarkerContext): Future[Seq[PropertyData]]
 //
@@ -94,7 +95,12 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
   }
 
 
-
+  override def createProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData] = db.run{
+    (properties
+      returning properties.map(_.id)
+      into ((property, id) => property.copy(id=id))
+      ) += PropertyData(0,data.address, data.postcode,data.latitude,data.longitude,data.bedroomCount,data.surface)
+  }
 
 
 }

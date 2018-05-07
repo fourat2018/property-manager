@@ -185,6 +185,43 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 //      contentAsString(home) must include("0")
 //
 //    }
+
+    "Return the prices of an existing property" in {
+      val request1 = FakeRequest(POST, "/v1/properties/3/prices").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("price", "2200"), ("date", "2017-02-21"))
+      val home1 = route(app, request1).get
+
+      val request2 = FakeRequest(POST, "/v1/properties/3/prices").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("price", "2300"), ("date", "2017-02-21"))
+      val home2 = route(app, request2).get
+
+      val request3 = FakeRequest(POST, "/v1/properties/3/prices").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("price", "2400"), ("date", "2017-02-21"))
+      val home3 = route(app, request3).get
+
+      val request = FakeRequest(GET, "/v1/properties/3/prices").withHeaders(HOST -> "localhost:9000")
+      val home = route(app, request).get
+
+      contentAsString(home) must include("2200")
+      contentAsString(home) must include("2300")
+      contentAsString(home) must include("2400")
+      contentAsString(home) must include("2500")
+    }
+
+    // This test is working when the application is running live but does not pass on test mode, maybe a problem with the delete cascad TBC
+//    "delete  the prices of a property when the property is deleted"  in {
+//      val request1 = FakeRequest(DELETE, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+//      val home1 = route(app, request1).get
+//
+//
+//      val request = FakeRequest(GET, "/v1/properties/3/prices").withHeaders(HOST -> "localhost:9000")
+//      val home = route(app, request).get
+//
+//      contentAsString(home) must include("[]")
+//
+//    }
+
+
   }
 
 }

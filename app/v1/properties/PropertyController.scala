@@ -59,7 +59,12 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     processAddPropertyPrice(propertyId)
   }
 
+  def listPropertyPrices(propertyId:Long ) : Action[AnyContent] = PropertyAction.async {implicit request =>
+    logger.trace(s"get prices evolution of the property: id = $propertyId")
+    propertyResourceHandler.getPropertyPrices(propertyId).map(prices =>Ok(Json.toJson(prices) ))
+  }
 
+  //***********Forms mapping handlers ***************************
 
   private def processCreateProperty[A]()(implicit request: PropertyRequest[A]): Future[Result] = {
     def failure(badForm: Form[PropertyFormInput]) = {

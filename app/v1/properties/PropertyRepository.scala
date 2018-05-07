@@ -34,13 +34,14 @@ trait PropertyRepository {
 
   def getProperty(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]]
 
-
   def deleteProperty(propertyId:Long) (implicit mc: MarkerContext):Future[Int]
 
   def updateProperty(propertyId:Long,propertyData: PropertyFormInput)(implicit mc: MarkerContext): Future[Int]
 
 //***************************Prices ********************************
   def addPrice(propertyId: Long, priceData: PriceFormInput) :  Future[Int]
+
+  def listPrices(propertyId:Long)(implicit  mc:MarkerContext ) : Future[Seq[PriceData]]
 
 
 
@@ -129,6 +130,9 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
       .update(PropertyData(propertyId,data.address, data.postcode,data.latitude,data.longitude,data.bedroomCount,data.surface))
   }
 
+
+  //********************************Prices**********************************
+
   override def addPrice(propertyId: Long, priceData: PriceFormInput) :  Future[Int] = {
     try {
       db.run {
@@ -142,6 +146,10 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
       }
     }
 
+  }
+
+  override  def listPrices(propertyId:Long)(implicit  mc:MarkerContext ) : Future[Seq[PriceData]] = db.run {
+    prices.filter(_.propertyId===propertyId).result
   }
 
 

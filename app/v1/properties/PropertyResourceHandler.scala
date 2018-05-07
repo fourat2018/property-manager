@@ -4,8 +4,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.MarkerContext
 
-
 import javax.inject.{Inject, Provider}
+
+import java.sql.Date
 
 import v1.properties.forms._
 import v1.properties.resource._
@@ -45,10 +46,20 @@ class PropertyResourceHandler @Inject()(
 
   }
 
-
+/*******************************Prices************************************************/
   def addPropertyPrice(propertyId:Long,priceInput:PriceFormInput)(implicit mc: MarkerContext)  = {
     propertyRepository.addPrice(propertyId,priceInput)
 
+  }
+
+  def getPropertyPrices(propertyId:Long)(implicit mc: MarkerContext): Future[PricesResource ] = {
+    propertyRepository.listPrices(propertyId).map{pricesList =>  createPricesResource(pricesList,propertyId)
+    }
+  }
+
+
+  private def createPricesResource(prices: Seq[PriceData], propertyId:Long): PricesResource = {
+    PricesResource(prices.map(p=>PriceResource(p.price,p.date.toString())),routerProvider.get.link(propertyId))
   }
 
 

@@ -29,6 +29,11 @@ class PropertyResourceHandler @Inject()(
     }
   }
 
+  def propertyDelete(propertyId: Long)(implicit mc: MarkerContext)= {
+    propertyRepository.deleteProperty(propertyId)
+  }
+
+
 
 
 

@@ -35,6 +35,12 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     propertyResourceHandler.propertyLookup(propertyId).map { property =>Ok(Json.toJson(property))}
   }
 
+  def removeProperty(propertyId:Long): Action[AnyContent] = PropertyAction.async { implicit request =>
+    logger.trace(s"remove property : id = $propertyId ")
+    propertyResourceHandler.propertyDelete(propertyId).map { status => Ok(""+status)
+    }
+  }
+
   private def processCreateProperty[A]()(implicit request: PropertyRequest[A]): Future[Result] = {
     def failure(badForm: Form[PropertyFormInput]) = {
       Future.successful(BadRequest(badForm.errorsAsJson))
@@ -48,6 +54,12 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
 
     PropertyFormInput.propertyForm.bindFromRequest().fold(failure, success)
   }
+
+
+//  private def processReturnStatus(status : Int) : Future[Result] = status match {
+//    case 0 => Future(BadRequest(Json.toJson(status)))
+//    case _    => Future(Accepted(Json.toJson(status)))
+//  }
 
   }
 

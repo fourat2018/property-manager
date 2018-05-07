@@ -23,16 +23,13 @@ class PropertyRouter @Inject()(controller: PropertyController) extends SimpleRou
     //properties API
     case POST(p"/") =>
       controller.createProperty()
-//
+
     case GET(p"/$propertyId") =>
       controller.retrieveProperty(propertyId.toLong)
-//
-//    case POST(p"/") =>
-//      controller.createProperty()
-//
-//    case DELETE(p"/$propertyId") =>
-//      controller.removeProperty(propertyId.toLong)
-//
+
+    case DELETE(p"/$propertyId") =>
+      controller.removeProperty(propertyId.toLong)
+
 //    case PATCH((p"/$propertyId")) =>
 //      controller.updateProperty(propertyId.toLong)
 //

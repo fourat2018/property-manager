@@ -35,7 +35,7 @@ trait PropertyRepository {
   def getProperty(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]]
 
 //
-//  def deleteProperty(id:Long) (implicit mc: MarkerContext):Future[Int]
+  def deleteProperty(propertyId:Long) (implicit mc: MarkerContext):Future[Int]
 //
 //  def updateProperty(id:Long,data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData]
 
@@ -107,6 +107,11 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
 
   override def getProperty(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]] = db.run {
     properties.filter(_.id===propertyId).result.headOption
+  }
+
+
+  override def deleteProperty(propertyId:Long) (implicit mc: MarkerContext):Future[Int] = db.run {
+    properties.filter(_.id===propertyId).delete
   }
 
 

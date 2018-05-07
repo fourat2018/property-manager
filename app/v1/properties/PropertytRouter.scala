@@ -41,8 +41,8 @@ class PropertyRouter @Inject()(controller: PropertyController) extends SimpleRou
 //    case GET(p"/$propertyId/prices" ) =>
 //      controller.listPropertyPrices(propertyId.toLong)
 //
-//    case POST(p"/$propertyId/prices") =>
-//      controller.addPropertyPrice(propertyId.toLong)
+    case POST(p"/$propertyId/prices") =>
+      controller.addPropertyPrice(propertyId.toLong)
 
 
 

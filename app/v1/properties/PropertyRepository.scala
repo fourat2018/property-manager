@@ -12,7 +12,7 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
 
-import v1.properties.forms.PropertyFormInput
+import v1.properties.forms._
 
 
 
@@ -29,15 +29,19 @@ class PropertyExecutionContext @Inject()(actorSystem: ActorSystem) extends Custo
 trait PropertyRepository {
 
   def insertProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData]
-//
+
   def listProperties()(implicit mc: MarkerContext): Future[Seq[PropertyData]]
-//
+
   def getProperty(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]]
 
-//
+
   def deleteProperty(propertyId:Long) (implicit mc: MarkerContext):Future[Int]
-//
+
   def updateProperty(propertyId:Long,propertyData: PropertyFormInput)(implicit mc: MarkerContext): Future[Int]
+
+//***************************Prices ********************************
+  def addPrice(propertyId: Long, priceData: PriceFormInput) :  Future[Int]
+
 
 
 }
@@ -95,6 +99,7 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
     def * = (id, price, date,propertyId) <> ((PriceData.apply _).tupled, PriceData.unapply )
   }
 
+  private val prices = TableQuery[PricesTable]
 
 
 
@@ -124,7 +129,20 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
       .update(PropertyData(propertyId,data.address, data.postcode,data.latitude,data.longitude,data.bedroomCount,data.surface))
   }
 
+  override def addPrice(propertyId: Long, priceData: PriceFormInput) :  Future[Int] = {
+    try {
+      db.run {
+        (prices.map(p => p)) += PriceData(0, priceData.price, priceData.date, propertyId)
+      }
 
+    } catch {
+      //In case of foreign key violation
+      case e: Exception => {
+        e.printStackTrace(); Future {0}
+      }
+    }
+
+  }
 
 
 }

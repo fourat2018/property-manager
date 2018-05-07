@@ -7,7 +7,7 @@ import play.api.MarkerContext
 
 import javax.inject.{Inject, Provider}
 
-import v1.properties.forms.PropertyFormInput
+import v1.properties.forms._
 import v1.properties.resource._
 
 
@@ -46,23 +46,15 @@ class PropertyResourceHandler @Inject()(
   }
 
 
+  def addPropertyPrice(propertyId:Long,priceInput:PriceFormInput)(implicit mc: MarkerContext)  = {
+    propertyRepository.addPrice(propertyId,priceInput)
 
-
-
+  }
 
 
   private def createPropertyResource(p: PropertyData): PropertyResource = {
     PropertyResource(p.id, p.address, p.postCode,p.latitude,p.longitude,p.bedroomCount,p.surface,routerProvider.get.link(p.id))
   }
-
-
-
-
-
-
-
-
-
 
 
 

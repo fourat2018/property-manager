@@ -28,7 +28,7 @@ class PropertyExecutionContext @Inject()(actorSystem: ActorSystem) extends Custo
 
 trait PropertyRepository {
 
-  def createProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData]
+  def insertProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData]
 //
 //  def listProperties()(implicit mc: MarkerContext): Future[Seq[PropertyData]]
 //
@@ -95,7 +95,9 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
   }
 
 
-  override def createProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData] = db.run{
+
+
+  override def insertProperty(data: PropertyFormInput)(implicit mc: MarkerContext): Future[PropertyData] = db.run{
     (properties
       returning properties.map(_.id)
       into ((property, id) => property.copy(id=id))

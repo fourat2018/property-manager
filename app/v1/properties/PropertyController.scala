@@ -26,10 +26,14 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
 
 
   def createProperty: Action[AnyContent] = PropertyAction.async { implicit request =>
-    logger.trace("process: ")
+    logger.trace("new property creation request: ")
     processCreateProperty()
   }
 
+//  def retrieveProperty(propertyId: Long): Action[AnyContent] = PropertyAction.async { implicit request =>
+//    logger.trace(s"retrieve property : id = $id")
+//    postResourceHandler.lookup(propertyId).map { property =>Ok(Json.toJson(property))}
+//  }
 
 
   private def processCreateProperty[A]()(implicit request: PropertyRequest[A]): Future[Result] = {
@@ -38,7 +42,7 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     }
 
     def success(input: PropertyFormInput) = {
-      propertyResourceHandler.createProperty(input).map { property =>
+      propertyResourceHandler.addProperty(input).map { property =>
         Created(Json.toJson(property))
       }
     }

@@ -15,7 +15,7 @@ case class PropertyResource(id: Long, address:String, postcode:String, latitude:
 object PropertyResource {
 
 
-  implicit val implicitWrites: Writes[PostResource] = (
+  implicit val implicitWrites: Writes[PropertyResource] = (
     (JsPath \ "id").write[Long] and
       (JsPath \ "address").write[String] and
       (JsPath \ "postcode").write[String] and
@@ -24,7 +24,7 @@ object PropertyResource {
       {JsPath \ "bedroom_count"}.writeNullable[Int] and
       {JsPath \ "surface"}.writeNullable[Double] and
       (JsPath \ "link").write[String]
-    )(unlift(PostResource.unapply))
+    )(unlift(PropertyResource.unapply))
 }
 
 

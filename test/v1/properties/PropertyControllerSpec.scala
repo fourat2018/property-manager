@@ -63,8 +63,6 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 
     }
 
-
-
     "return a created property" in {
       val request = FakeRequest(GET, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
@@ -101,20 +99,72 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val home = route(app, request).get
 
       contentAsString(home) must include ("0")
-
     }
 
 
+    //PATCH Operations including : modify required attributes and modifying/adding/deleting optional attributes
+
+    "reject a patch with a missing field in the body form " in {
+      val request = FakeRequest(PATCH, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"))
+      val home = route(app, request).get
+
+      contentAsString(home) must include ("This field is required")
+    }
 
 
+    "reject a patch on a non existing property" in {
+      val request = FakeRequest(PATCH, "/v1/properties/220").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"),("longitude","0"))
+      val home = route(app, request).get
+
+      contentAsString(home) must include ("0")
+    }
+
+    "accept a patch on an existing property" in {
+      val request = FakeRequest(PATCH, "/v1/properties/3" ).withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("address","Nice"),("postcode","06200"),("latitude","12345.25"),("longitude","0"))
+      val home = route(app, request).get
+
+      contentAsString(home) must include ("1")
+
+      val requestCheck = FakeRequest(GET, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+      val homeCheck = route(app, requestCheck).get
+
+      contentAsString(homeCheck) must include ("Nice")
+      contentAsString(homeCheck) must include ("06200")
+
+    }
+
+    "add Optional attributes" in {
+      val request = FakeRequest(PATCH, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("address", "Nice"), ("postcode", "06200"), ("latitude", "12345.25"), ("longitude", "0"), ("bedroom_count", "6"), ("surface", "50"))
+      val home = route(app, request).get
+
+      contentAsString(home) must include("1")
+
+      val requestCheck = FakeRequest(GET, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+      val homeCheck = route(app, requestCheck).get
+
+      contentAsString(homeCheck) must include("bedroom_count")
+      contentAsString(homeCheck) must include("surface")
+    }
 
 
+    "should remove Optional attributes" in {
+      val request = FakeRequest(PATCH, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("address", "Nice"), ("postcode", "06200"), ("latitude", "12345.25"), ("longitude", "0"), ("bedroom_count", "6"))
+      val home = route(app, request).get
 
+      contentAsString(home) must include("1")
 
+      val requestCheck = FakeRequest(GET, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+      val homeCheck = route(app, requestCheck).get
 
+      contentAsString(homeCheck) must include("bedroom_count")
+      contentAsString(homeCheck) must not include("surface")
 
-
-
+    }
 
   }
 

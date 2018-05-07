@@ -1,6 +1,6 @@
 GET        /                       controllers.HomeController.index
 
-->         /v1/posts               v1.properties.PropertyRouter
+->         /v1/properties               v1.properties.PropertyRouter
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.at(path="/public", file)

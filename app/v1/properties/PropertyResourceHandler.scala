@@ -33,6 +33,12 @@ class PropertyResourceHandler @Inject()(
     propertyRepository.deleteProperty(propertyId)
   }
 
+  def propertiesList(implicit mc: MarkerContext): Future[Seq[PropertyResource]] = {
+    propertyRepository.listProperties().map { properties =>
+      properties.map(property => createPropertyResource(property))
+    }
+  }
+
 
 
 

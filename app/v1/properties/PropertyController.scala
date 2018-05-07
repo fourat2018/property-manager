@@ -41,6 +41,13 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     }
   }
 
+  def listProperties()  : Action[AnyContent] = PropertyAction.async { implicit request =>
+    logger.trace("list properties ")
+    propertyResourceHandler.propertiesList.map { properties =>Ok(Json.toJson(properties))}
+  }
+
+
+
   private def processCreateProperty[A]()(implicit request: PropertyRequest[A]): Future[Result] = {
     def failure(badForm: Form[PropertyFormInput]) = {
       Future.successful(BadRequest(badForm.errorsAsJson))

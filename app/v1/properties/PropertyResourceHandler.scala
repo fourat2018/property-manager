@@ -20,6 +20,17 @@ class PropertyResourceHandler @Inject()(
   }
 
 
+  def propertyLookup(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyResource]] = {
+    val propertyFuture = propertyRepository.getProperty(propertyId)
+    propertyFuture.map { maybePropertyData =>
+      maybePropertyData.map { propertyData =>
+        createPropertyResource( propertyData)
+      }
+    }
+  }
+
+
+
 
 
 

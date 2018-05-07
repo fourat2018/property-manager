@@ -32,7 +32,8 @@ trait PropertyRepository {
 //
 //  def listProperties()(implicit mc: MarkerContext): Future[Seq[PropertyData]]
 //
-//  def getProperty(id: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]]
+  def getProperty(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]]
+
 //
 //  def deleteProperty(id:Long) (implicit mc: MarkerContext):Future[Int]
 //
@@ -103,6 +104,11 @@ class PropertyRepositoryImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
       into ((property, id) => property.copy(id=id))
       ) += PropertyData(0,data.address, data.postcode,data.latitude,data.longitude,data.bedroomCount,data.surface)
   }
+
+  override def getProperty(propertyId: Long)(implicit mc: MarkerContext): Future[Option[PropertyData]] = db.run {
+    properties.filter(_.id===propertyId).result.headOption
+  }
+
 
 
 }

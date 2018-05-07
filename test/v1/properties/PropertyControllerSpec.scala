@@ -17,38 +17,38 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val request = FakeRequest(GET, "/v1/properties").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
 
-      contentAsString(home) must include ("[]")
+      contentAsString(home) must include("[]")
 
     }
 
     "Not accept a CREATE query with a missing field" in {
-      val request = FakeRequest(POST, "/v1/properties").withHeaders(HOST -> "localhost:9000").withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"))
+      val request = FakeRequest(POST, "/v1/properties").withHeaders(HOST -> "localhost:9000").withFormUrlEncodedBody(("address", "toto"), ("postcode", "titi"), ("latitude", "12345.25"))
       val home = route(app, request).get
 
-      contentAsString(home) must include ("This field is required")
+      contentAsString(home) must include("This field is required")
     }
 
 
     "accept a CREATE query with all the required fields" in {
       val request1 = FakeRequest(POST, "/v1/properties").withHeaders(HOST -> "localhost:9000")
-        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"),("longitude","0"))
+        .withFormUrlEncodedBody(("address", "toto"), ("postcode", "titi"), ("latitude", "12345.25"), ("longitude", "0"))
       val home1 = route(app, request1).get
 
-      contentAsString(home1) must include ("/v1/properties/1\"")
+      contentAsString(home1) must include("/v1/properties/1\"")
 
 
       val request2 = FakeRequest(POST, "/v1/properties").withHeaders(HOST -> "localhost:9000")
-        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"),("longitude","0"))
+        .withFormUrlEncodedBody(("address", "toto"), ("postcode", "titi"), ("latitude", "12345.25"), ("longitude", "0"))
       val home2 = route(app, request2).get
 
-      contentAsString(home2) must include ("/v1/properties/2\"")
+      contentAsString(home2) must include("/v1/properties/2\"")
 
 
       val request3 = FakeRequest(POST, "/v1/properties").withHeaders(HOST -> "localhost:9000")
-        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"),("longitude","0"))
+        .withFormUrlEncodedBody(("address", "toto"), ("postcode", "titi"), ("latitude", "12345.25"), ("longitude", "0"))
       val home3 = route(app, request3).get
 
-      contentAsString(home3) must include ("/v1/properties/3\"")
+      contentAsString(home3) must include("/v1/properties/3\"")
 
     }
 
@@ -67,14 +67,14 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val request = FakeRequest(GET, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
 
-      contentAsString(home) must include ("/v1/properties/1\"")
+      contentAsString(home) must include("/v1/properties/1\"")
     }
 
     "return null in case a requested query does not exist" in {
       val request = FakeRequest(GET, "/v1/properties/125").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
 
-      contentAsString(home) must include ("null")
+      contentAsString(home) must include("null")
     }
 
 
@@ -82,7 +82,7 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val request = FakeRequest(DELETE, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
 
-      contentAsString(home) must include ("1")
+      contentAsString(home) must include("1")
 
     }
 
@@ -90,7 +90,7 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val request = FakeRequest(GET, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
 
-      contentAsString(home) must include ("null")
+      contentAsString(home) must include("null")
     }
 
 
@@ -98,7 +98,7 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val request = FakeRequest(DELETE, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
       val home = route(app, request).get
 
-      contentAsString(home) must include ("0")
+      contentAsString(home) must include("0")
     }
 
 
@@ -106,33 +106,33 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 
     "reject a patch with a missing field in the body form " in {
       val request = FakeRequest(PATCH, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
-        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"))
+        .withFormUrlEncodedBody(("address", "toto"), ("postcode", "titi"), ("latitude", "12345.25"))
       val home = route(app, request).get
 
-      contentAsString(home) must include ("This field is required")
+      contentAsString(home) must include("This field is required")
     }
 
 
     "reject a patch on a non existing property" in {
       val request = FakeRequest(PATCH, "/v1/properties/220").withHeaders(HOST -> "localhost:9000")
-        .withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"),("longitude","0"))
+        .withFormUrlEncodedBody(("address", "toto"), ("postcode", "titi"), ("latitude", "12345.25"), ("longitude", "0"))
       val home = route(app, request).get
 
-      contentAsString(home) must include ("0")
+      contentAsString(home) must include("0")
     }
 
     "accept a patch on an existing property" in {
-      val request = FakeRequest(PATCH, "/v1/properties/3" ).withHeaders(HOST -> "localhost:9000")
-        .withFormUrlEncodedBody(("address","Nice"),("postcode","06200"),("latitude","12345.25"),("longitude","0"))
+      val request = FakeRequest(PATCH, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("address", "Nice"), ("postcode", "06200"), ("latitude", "12345.25"), ("longitude", "0"))
       val home = route(app, request).get
 
-      contentAsString(home) must include ("1")
+      contentAsString(home) must include("1")
 
       val requestCheck = FakeRequest(GET, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
       val homeCheck = route(app, requestCheck).get
 
-      contentAsString(homeCheck) must include ("Nice")
-      contentAsString(homeCheck) must include ("06200")
+      contentAsString(homeCheck) must include("Nice")
+      contentAsString(homeCheck) must include("06200")
 
     }
 
@@ -151,7 +151,7 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
     }
 
 
-    "should remove Optional attributes" in {
+    "remove Optional attributes" in {
       val request = FakeRequest(PATCH, "/v1/properties/3").withHeaders(HOST -> "localhost:9000")
         .withFormUrlEncodedBody(("address", "Nice"), ("postcode", "06200"), ("latitude", "12345.25"), ("longitude", "0"), ("bedroom_count", "6"))
       val home = route(app, request).get
@@ -162,10 +162,29 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val homeCheck = route(app, requestCheck).get
 
       contentAsString(homeCheck) must include("bedroom_count")
-      contentAsString(homeCheck) must not include("surface")
+      contentAsString(homeCheck) must not include ("surface")
 
     }
 
+    //*********************Prices***********************************/
+
+    "add Price to an exiating property" in {
+      val request = FakeRequest(POST, "/v1/properties/3/prices").withHeaders(HOST -> "localhost:9000")
+        .withFormUrlEncodedBody(("price", "125000"), ("date", "2017-02-21"))
+      val home = route(app, request).get
+
+      contentAsString(home) must include("1")
+
+    }
+
+//    "reject add Price to a non exiating property" in {
+//      val request = FakeRequest(POST, "/v1/properties/1255/prices").withHeaders(HOST -> "localhost:9000")
+//        .withFormUrlEncodedBody(("price", "125000"), ("date", "2017-02-21"))
+//      val home = route(app, request).get
+//
+//      contentAsString(home) must include("0")
+//
+//    }
   }
 
 }

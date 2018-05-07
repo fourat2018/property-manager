@@ -40,6 +40,12 @@ class PropertyResourceHandler @Inject()(
   }
 
 
+  def updateProperty(propertyId:Long,propertyInput: PropertyFormInput)(implicit mc: MarkerContext)  = {
+    propertyRepository.updateProperty(propertyId,propertyInput)
+
+  }
+
+
 
 
 

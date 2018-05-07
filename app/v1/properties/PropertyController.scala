@@ -47,6 +47,12 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
   }
 
 
+  def updateProperty(propertyId:Long) : Action[AnyContent] = PropertyAction.async { implicit request =>
+    logger.trace(s"update property : id = $propertyId ")
+    processUpdateProperty(propertyId)
+  }
+
+
 
   private def processCreateProperty[A]()(implicit request: PropertyRequest[A]): Future[Result] = {
     def failure(badForm: Form[PropertyFormInput]) = {
@@ -62,6 +68,19 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     PropertyFormInput.propertyForm.bindFromRequest().fold(failure, success)
   }
 
+  private def processUpdateProperty[A](propertyId:Long)(implicit request: PropertyRequest[A]): Future[Result] = {
+    def failure(badForm: Form[PropertyFormInput]) = {
+      Future.successful(BadRequest(badForm.errorsAsJson))
+    }
+
+    def success(propertyId:Long,input: PropertyFormInput) = {
+      propertyResourceHandler.updateProperty(propertyId,input).map { status =>
+        Accepted(Json.toJson(status))
+      }
+    }
+
+    PropertyFormInput.propertyForm.bindFromRequest().fold(failure, aProperty=>success(propertyId,aProperty))
+  }
 
 //  private def processReturnStatus(status : Int) : Future[Result] = status match {
 //    case 0 => Future(BadRequest(Json.toJson(status)))

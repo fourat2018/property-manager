@@ -33,10 +33,8 @@ class PropertyRouter @Inject()(controller: PropertyController) extends SimpleRou
     case DELETE(p"/$propertyId") =>
       controller.removeProperty(propertyId.toLong)
 
-
-
-//    case PATCH((p"/$propertyId")) =>
-//      controller.updateProperty(propertyId.toLong)
+    case PATCH((p"/$propertyId")) =>
+      controller.updateProperty(propertyId.toLong)
 //
 //
 //    //Price Resource API

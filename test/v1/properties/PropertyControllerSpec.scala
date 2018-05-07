@@ -12,6 +12,15 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 
   "PropertyControllerSpec" should {
 
+
+    "Return an empty List if there is no properties created yet" in {
+      val request = FakeRequest(GET, "/v1/properties").withHeaders(HOST -> "localhost:9000")
+      val home = route(app, request).get
+
+      contentAsString(home) must include ("[]")
+
+    }
+
     "Not accept a CREATE query with a missing field" in {
       val request = FakeRequest(POST, "/v1/properties").withHeaders(HOST -> "localhost:9000").withFormUrlEncodedBody(("address","toto"),("postcode","titi"),("latitude","12345.25"))
       val home = route(app, request).get
@@ -42,6 +51,18 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       contentAsString(home3) must include ("/v1/properties/3\"")
 
     }
+
+    "Return the  properties list " in {
+      val request = FakeRequest(GET, "/v1/properties").withHeaders(HOST -> "localhost:9000")
+      val home = route(app, request).get
+
+      contentAsString(home) must include regex ("\"id\":1")
+      contentAsString(home) must include regex ("\"id\":2")
+      contentAsString(home) must include regex ("\"id\":3")
+
+
+    }
+
 
 
     "return a created property" in {

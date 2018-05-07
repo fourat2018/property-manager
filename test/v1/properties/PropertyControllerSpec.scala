@@ -28,6 +28,23 @@ class PropertyControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       contentAsString(home) must include ("/v1/properties/1\"")
     }
 
+    "return a created property" in {
+      val request = FakeRequest(GET, "/v1/properties/1").withHeaders(HOST -> "localhost:9000")
+      val home = route(app, request).get
+
+      contentAsString(home) must include ("/v1/properties/1\"")
+    }
+
+    "return null in case a requested query does not exist" in {
+      val request = FakeRequest(GET, "/v1/properties/125").withHeaders(HOST -> "localhost:9000")
+      val home = route(app, request).get
+
+      contentAsString(home) must include ("null")
+    }
+
+
+
+
 
 
 

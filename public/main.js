@@ -88,7 +88,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav>\n  <a routerLink=\"/properties\"></a>\n</nav>\n<router-outlet></router-outlet>\n\n\n"
+module.exports = "<nav>\n  <a routerLink=\"/properties\"></a>\n</nav>\n\n<router-outlet></router-outlet>\n\n\n"
 
 /***/ }),
 
@@ -217,7 +217,7 @@ var httpOptions = {
 var PropertyService = /** @class */ (function () {
     function PropertyService(http) {
         this.http = http;
-        this.propertiesURL = 'http://localhost:9000/v1/properties'; // URL to web api
+        this.propertiesURL = '/v1/properties'; // URL to web api
     }
     /** GET properties from the server */
     PropertyService.prototype.getProperties = function () {
@@ -238,9 +238,18 @@ var PropertyService = /** @class */ (function () {
         var url = this.propertiesURL + "/" + property.id;
         return this.http.delete(url, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { return console.log("deleted property id=" + property.id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.handleError('deleteproperty')));
     };
-    /** PUT: update the property on the server */
+    /** PATCH: update the property on the server */
     PropertyService.prototype.updateproperty = function (property) {
-        return this.http.patch(this.propertiesURL, property, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { return console.log("updated property id=" + property.id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.handleError('updateproperty')));
+        var url = this.propertiesURL + "/" + property.id;
+        return this.http.patch(url, property, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { return console.log("updated property id=" + property.id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.handleError('updateproperty')));
+    };
+    PropertyService.prototype.getPrices = function (id) {
+        var url = this.propertiesURL + "/" + id + "/prices";
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { return console.log("fetched prices id=" + id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.handleError("getproperty id=" + id)));
+    };
+    PropertyService.prototype.addPrice = function (id, price) {
+        var url = this.propertiesURL + "/" + id + "/prices";
+        return this.http.post(url, price, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { return console.log("addded prices id=" + id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.handleError("addPrice id=" + id)));
     };
     PropertyService.prototype.handleError = function (operation, result) {
         if (operation === void 0) { operation = 'operation'; }
@@ -281,7 +290,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<form class=\"form-horizontal\">\n<fieldset>\n\n\n<div class=\"form-group\">\n  <label class=\"col-md-2 control-label\" for=\"\">Address</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"address\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"propertyForm.address\">\n    \n  </div>\n</div>\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Post Code</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"postcode\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"propertyForm.postcode\">\n    \n  </div>\n</div>\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Latitude</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"latitude\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"propertyForm.latitude\">\n    \n  </div>\n</div>\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Longitude</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"longitude\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" [(ngModel)]=\"propertyForm.longitude\" >\n    \n  </div>\n</div>\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Bedroom number</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"bedroom_count\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\"[(ngModel)]=\"propertyForm.bedroom_count\">\n    \n  </div>\n</div>\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Surface</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"surface\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\"[(ngModel)]=\"propertyForm.surface\">\n    \n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\"></label>\n  <div class=\"col-md-4\">\n    <button id=\"\" name=\"\" class=\"btn btn-primary\"  (click)=\"add()\">Save</button>\n  </div>\n</div>\n\n</fieldset>\n</form>\n\n\n\n\n\n\n\n<table class=\"table table-striped\">\n  <tr>\n    <th *ngFor=\"let col of columns\">\n      {{col}}\n    </th>\n\n  </tr>\n   <tr *ngFor=\"let property of properties \">\n    <td>\n      {{property.id}} \n    </td>\n    <td>{{property.address}} </td>\n    <td>{{property.postcode}}  </td>\n    <td>{{property.latitude}} </td>\n    <td> {{property.longitude}} </td>\n    <td> {{property.bedroom_number}}</td>\n    <td>{{property.surface}}</td>\n    <td>\n        <button type=\"button\" class=\"btn btn-info\" >Update</button>\n        <button type=\"button\" class=\"btn btn-danger\" (click)=\"delete(property)\">Delete</button>\n        <button type=\"button\" class=\"btn btn-success\" >Prices</button>\n\n\n    </td>\n  </tr>\n  </table>\n\n"
+module.exports = "<div class=\"d-flex justify-content-between\">\n\n\n<div class=\"col-4\">\n\n<form class=\"\">\n<fieldset>\n\n\n<div class=\"form-row\">\n  <div class=\"form-group col-md-6\">\n\n  <label class=\"control-label\" for=\"\">Address</label>  \n  <input id=\"\" name=\"address\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"propertyForm.address\" required>\n    \n  </div>\n   <div class=\"form-group col-md-6\">\n\n  <label class=\" control-label\" for=\"\">Post Code</label>  \n  <input id=\"\" name=\"postcode\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"propertyForm.postcode\" required>\n    \n  </div>\n\n<!-- Text input-->\n  <div class=\"form-group col-md-6\">\n\n  <label class=\"control-label\" for=\"\">Latitude</label>  \n  <input id=\"\" name=\"latitude\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"propertyForm.latitude\" required>\n    \n  </div>\n\n  <div class=\"form-group col-md-6 \">\n  <label class=\"control-label\" for=\"\">Longitude</label>  \n  <input id=\"\" name=\"longitude\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" [(ngModel)]=\"propertyForm.longitude\" required>\n    \n  </div>\n\n  </div>\n\n\n\n\n<!-- Text input-->\n\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Bedroom number</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"bedroom_count\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\"[(ngModel)]=\"propertyForm.bedroom_count\">\n    \n  </div>\n</div>\n\n<!-- Text input-->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\">Surface</label>  \n  <div class=\"col-md-4\">\n  <input id=\"\" name=\"surface\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\"[(ngModel)]=\"propertyForm.surface\">\n    \n  </div>\n</div>\n\n<!-- Button -->\n<div class=\"form-group\">\n  <label class=\"col-md-4 control-label\" for=\"\"></label>\n  <div class=\"col-md-4\">\n    <button id=\"\" name=\"\" class=\"btn btn-primary\"  (click)=\"saveOrUpdatePushed()\">{{buttonUpdateOrSave}}</button>\n  </div>\n</div>\n\n</fieldset>\n</form>\n</div>\n\n\n\n\n<div>\n<table class=\"table table-striped\">\n<button class=\"btn btn-primary\" (click)=\"getProperties()\"><span class=\"glyphicon glyphicon-refresh\"  ></span> Refresh</button>\n\n  <tr>\n    <th *ngFor=\"let col of columns\">\n      {{col}}\n    </th>\n\n  </tr>\n   <tr *ngFor=\"let property of properties \">\n    <td>\n      {{property.id}} \n    </td>\n    <td   >{{property.address}} </td>\n    <td  >{{property.postcode}}  </td>\n    <td  >{{property.latitude}} </td>\n    <td > {{property.longitude}} </td>\n    <td > {{property.bedroom_count}}</td>\n    <td >{{property.surface}}</td>\n    <td>\n        <button type=\"button\" class=\"btn btn-info\" (click)=\"selectForUpdate(property)\" >Update</button>\n        <button type=\"button\" class=\"btn btn-danger\" (click)=\"delete(property)\">Delete</button>\n        <button type=\"button\" class=\"btn btn-success\" (click)=\"getPrices(property)\">Prices</button>\n\n\n    </td>\n  </tr>\n  </table>\n</div>\n</div>\n\n<h5>{{priceTitle()}}</h5>\n\n<div class = \"col-3\">\n\n<form class=\"\">\n<fieldset>\n\n\n<div class=\"form-row\">\n  <div class=\"form-group col-md-6\">\n\n  <label class=\"control-label\" for=\"\">Price</label>  \n  <input id=\"\" name=\"price\" type=\"text\" placeholder=\"\" class=\"form-control input-md\" required=\"\" [(ngModel)]=\"priceToAdd.price\">\n    \n  </div>\n   <div class=\"form-group col-md-6\">\n\n  <label class=\" control-label\" for=\"\">Date</label>  \n  <input id=\"\" name=\"date\" type=\"date\" placeholder=\"\" class=\"form-control input-md\"   required=\"\"  [(ngModel)]=\"priceToAdd.date\">\n    \n  </div>\n  <div class=\"form-group col-md-6\">\n      <button id=\"\" name=\"\" class=\"btn btn-primary\" (click)=\"addPrice()\" >Add a new Price </button>\n</div>\n\n  </div>\n  </fieldset>\n  </form>\n  </div>\n\n  <div>\n<table class=\"table table-striped\">\n  <tr>\n    <th *ngFor=\"let col of Pricecolumns\">\n      {{col}}\n    </th>\n\n  </tr>\n   <tr *ngFor=\"let price of prices \">\n  \n    <td  >{{price.price}} </td>\n    <td >{{price.date}}  </td>\n   \n  </tr>\n  </table>\n</div>\n\n"
 
 /***/ }),
 
@@ -312,7 +321,12 @@ var PropertyComponent = /** @class */ (function () {
     function PropertyComponent(propertyService) {
         this.propertyService = propertyService;
         this.columns = ["Id", "Address", "PostCode", "Latitude", "Longitude", "Bedroom number", "Surface", ""];
+        this.Pricecolumns = ["Price", "Date"];
         this.propertyForm = { address: undefined, postcode: undefined, latitude: undefined, longitude: undefined, bedroom_count: undefined, surface: undefined };
+        this.propertyPrice = { address: undefined, postcode: undefined, latitude: undefined, longitude: undefined, bedroom_count: undefined, surface: undefined };
+        this.priceToAdd = { price: undefined, date: undefined };
+        this.buttonUpdateOrSave = "Add a new Property";
+        this.save = true;
     }
     PropertyComponent.prototype.ngOnInit = function () {
         this.getProperties();
@@ -322,6 +336,27 @@ var PropertyComponent = /** @class */ (function () {
         this.propertyService.getProperties()
             .subscribe(function (properties) { return _this.properties = properties; });
     };
+    PropertyComponent.prototype.selectForUpdate = function (property) {
+        this.buttonUpdateOrSave = "Update this Property";
+        this.propertyForm = { id: property.id, address: property.address, postcode: property.postcode, latitude: property.latitude, longitude: property.latitude,
+            bedroom_count: property.bedroom_count, surface: property.surface };
+        this.save = false;
+    };
+    PropertyComponent.prototype.saveOrUpdatePushed = function () {
+        if (this.save) {
+            this.add();
+        }
+        else {
+            this.save = true;
+            this.buttonUpdateOrSave = "Add a new Property";
+            this.updateProperty(this.propertyForm);
+            this.propertyForm = { address: undefined, postcode: undefined, latitude: undefined, longitude: undefined, bedroom_count: undefined, surface: undefined };
+        }
+    };
+    PropertyComponent.prototype.updateProperty = function (property) {
+        this.propertyService.updateproperty(property)
+            .subscribe();
+    };
     PropertyComponent.prototype.add = function () {
         var _this = this;
         this.propertyService.addProperty(this.propertyForm)
@@ -330,8 +365,30 @@ var PropertyComponent = /** @class */ (function () {
         });
     };
     PropertyComponent.prototype.delete = function (property) {
+        if (property.id === this.propertyPrice.id) {
+            this.propertyPrice = { address: undefined, postcode: undefined, latitude: undefined, longitude: undefined, bedroom_count: undefined, surface: undefined };
+            this.prices = [];
+        }
         this.properties = this.properties.filter(function (p) { return p !== property; });
         this.propertyService.deleteProperty(property).subscribe();
+    };
+    PropertyComponent.prototype.getPrices = function (property) {
+        var _this = this;
+        this.propertyPrice = property;
+        this.propertyService.getPrices(property.id)
+            .subscribe(function (prices) { console.log(prices.price_evolution.length); _this.prices = prices.price_evolution; });
+    };
+    PropertyComponent.prototype.addPrice = function () {
+        this.propertyService.addPrice(this.propertyPrice.id, this.priceToAdd).subscribe();
+        this.getPrices(this.propertyPrice);
+    };
+    PropertyComponent.prototype.priceTitle = function () {
+        if (this.propertyPrice.id != undefined) {
+            return "Price Evolution for property " + this.propertyPrice.id + " located in " + this.propertyPrice.address + "," + this.propertyPrice.postcode;
+        }
+        else {
+            return "Please select a property to diplay Price Evolution";
+        }
     };
     PropertyComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({

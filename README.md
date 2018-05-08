@@ -61,14 +61,14 @@ sbt  test
 ## Packaging 
 Classic Docker Container, a simple script of creation available in scripts/dockerize.sh
 
-##d atabase 
+## database 
 simple H2 in memory database, using ***Slick*** plugin to avoid writing hardcoded SQL queries, which can simplify the migration from a db provider to another 
 
 ## UI 
 the code is in different github repo 
 https://github.com/fourat2018/property-manager-ui
 
-but the ui build is available in projects/ and the available via the route /index.html 
+but the ui build is available in public/ and the available via the route /index.html 
 
 The UI is not robust 
 

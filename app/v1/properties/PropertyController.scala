@@ -30,18 +30,18 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     processCreateProperty()
   }
 
-  def retrieveProperty(propertyId: Long): Action[AnyContent] = PropertyAction.async { implicit request =>
+  def retrieveProperty(propertyId: Long): Action[AnyContent] = PropertyAction.async {
     logger.trace(s"retrieve property : id = $propertyId")
     propertyResourceHandler.propertyLookup(propertyId).map { property =>Ok(Json.toJson(property))}
   }
 
-  def removeProperty(propertyId:Long): Action[AnyContent] = PropertyAction.async { implicit request =>
+  def removeProperty(propertyId:Long): Action[AnyContent] = PropertyAction.async {
     logger.trace(s"remove property : id = $propertyId ")
     propertyResourceHandler.propertyDelete(propertyId).map { status => Ok(""+status)
     }
   }
 
-  def listProperties()  : Action[AnyContent] = PropertyAction.async { implicit request =>
+  def listProperties()  : Action[AnyContent] = PropertyAction.async {
     logger.trace("list properties ")
     propertyResourceHandler.propertiesList.map { properties =>Ok(Json.toJson(properties))}
   }
@@ -59,7 +59,7 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
     processAddPropertyPrice(propertyId)
   }
 
-  def listPropertyPrices(propertyId:Long ) : Action[AnyContent] = PropertyAction.async {implicit request =>
+  def listPropertyPrices(propertyId:Long ) : Action[AnyContent] = PropertyAction.async {
     logger.trace(s"get prices evolution of the property: id = $propertyId")
     propertyResourceHandler.getPropertyPrices(propertyId).map(prices =>Ok(Json.toJson(prices) ))
   }
@@ -102,7 +102,7 @@ class PropertyController @Inject()(cc: PropertyControllerComponents)(implicit ec
 
     def success(propertyId:Long,input: PriceFormInput) = {
       propertyResourceHandler.addPropertyPrice(propertyId,input).map { status =>
-        Accepted (Json.toJson(status))
+        Accepted(Json.toJson(status))
       }
     }
 

@@ -1,15 +1,15 @@
-#Property Manager
+# Property Manager
 
 ## REST API 
 
 
 
-###Get the available Properties
+### Get the available Properties
 ```routes
 GET /v1/properties 
 ```
 
-###Create a new Property
+### Create a new Property
 ```routes
 POST /v1/properties 
 ```
@@ -18,7 +18,7 @@ example
 http --verbose POST http://localhost:9000/v1/properties address="Nice" postcode="06000" latitude=99999 longitude=999999 
 ```
 
-###Modify a required attribute or add/delete/modify an optional attribute 
+### Modify a required attribute or add/delete/modify an optional attribute 
 ```routes
 PATCH /v1/properties/$id
 ```
@@ -34,12 +34,12 @@ http --verbose PATCH http://localhost:9000/v1/properties/2 address="Nice" postco
 ```
 The body of the PATCH request contains the ***diff*** 
 
-###Delete a property 
+### Delete a property 
 ```routes
 DELETE /v1/properties/$id 
 ```
 
-###Get the prices of a property
+### Get the prices of a property
 ```routes
 GET  /v1/properties/$id/prices 
 ```
@@ -58,10 +58,10 @@ The tests are not "advanced" (I am discovering the framework) but there is a bun
 sbt  test
 ```
 
-##Packaging 
+## Packaging 
 Classic Docker Container, a simple script of creation available in scripts/dockerize.sh
 
-##database 
+##d atabase 
 simple H2 in memory database, using ***Slick*** plugin to avoid writing hardcoded SQL queries, which can simplify the migration from a db provider to another 
 
 ## UI 
@@ -73,6 +73,6 @@ but the ui build is available in projects/ and the available via the route /inde
 The UI is not robust 
 
 ## deployment 
-http://euphrate.sloppy.zone/properties
+http://euphrate.sloppy.zone/index.html
 
 

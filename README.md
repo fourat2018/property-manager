@@ -1,73 +1,78 @@
-# Play REST API
+#Property Manager
 
-[![Build Status](https://travis-ci.org/playframework/play-scala-rest-api-example.svg?branch=2.6.x)](https://travis-ci.org/playframework/play-scala-rest-api-example)
+## REST API 
 
-This is the example project for [Making a REST API in Play](http://developer.lightbend.com/guides/play-rest-api/index.html).
 
-## Appendix
 
-### Running
-
-You need to download and install sbt for this application to run.
-
-Once you have sbt installed, the following at the command prompt will start up Play in development mode:
-
-```bash
-sbt run
-```
-
-Play will start up on the HTTP port at <http://localhost:9000/>.   You don't need to deploy or reload anything -- changing any source code while the server is running will automatically recompile and hot-reload the application on the next HTTP request. 
-
-### Usage
-
-If you call the same URL from the command line, you’ll see JSON. Using httpie, we can execute the command:
-
-```bash
-http --verbose http://localhost:9000/v1/posts
-```
-
-and get back:
-
+###Get the available Properties
 ```routes
-GET /v1/posts HTTP/1.1
+GET /v1/properties 
 ```
 
-Likewise, you can also send a POST directly as JSON:
-
-```bash
-http --verbose POST http://localhost:9000/v1/posts title="hello" body="world"
-```
-
-and get:
-
+###Create a new Property
 ```routes
-POST /v1/posts HTTP/1.1
+POST /v1/properties 
 ```
-
-### Load Testing
-
-The best way to see what Play can do is to run a load test.  We've included Gatling in this test project for integrated load testing.
-
-Start Play in production mode, by [staging the application](https://www.playframework.com/documentation/2.5.x/Deploying) and running the play script:s
-
+example 
 ```bash
-sbt stage
-cd target/universal/stage
-bin/play-rest-api-example -Dplay.crypto.secret=testing
+http --verbose POST http://localhost:9000/v1/properties address="Nice" postcode="06000" latitude=99999 longitude=999999 
 ```
 
-Then you'll start the Gatling load test up (it's already integrated into the project):
+###Modify a required attribute or add/delete/modify an optional attribute 
+```routes
+PATCH /v1/properties/$id
+```
 
+example: add a surface to a property (the property id is 2)
 ```bash
-sbt gatling:test
+http --verbose PATCH http://localhost:9000/v1/properties/2 address="Nice" postcode="06000" latitude=99999 longitude=999999 surface=500
 ```
 
-For best results, start the gatling load test up on another machine so you do not have contending resources.  You can edit the [Gatling simulation](http://gatling.io/docs/2.2.2/general/simulation_structure.html#simulation-structure), and change the numbers as appropriate.
-
-Once the test completes, you'll see an HTML file containing the load test chart:
-
+to remove it afterwards
 ```bash
- ./rest-api/target/gatling/gatlingspec-1472579540405/index.html
+http --verbose PATCH http://localhost:9000/v1/properties/2 address="Nice" postcode="06000" latitude=99999 longitude=999999 
+```
+The body of the PATCH request contains the ***diff*** 
+
+###Delete a property 
+```routes
+DELETE /v1/properties/$id 
 ```
 
-That will contain your load test results.
+###Get the prices of a property
+```routes
+GET  /v1/properties/$id/prices 
+```
+### Add a price to e property
+```routes
+POST  /v1/properties/$id/prices 
+```
+example 
+```bash
+http --verbose POST http://localhost:9000/v1/properties/2/prices  date="2017-08-02" price="06000" 
+```
+
+## Tests 
+The tests are not "advanced" (I am discovering the framework) but there is a bunch of them runnable by 
+```bash
+sbt  test
+```
+
+##Packaging 
+Classic Docker Container, a simple script of creation available in scripts/dockerize.sh
+
+##database 
+simple H2 in memory database, using ***Slick*** plugin to avoid writing hardcoded SQL queries, which can simplify the migration from a db provider to another 
+
+## UI 
+the code is in different github repo 
+https://github.com/fourat2018/property-manager-ui
+
+but the ui build is available in projects/ and the available via the route /index.html 
+
+The UI is not robust 
+
+## deployment 
+http://euphrate.sloppy.zone/properties
+
+

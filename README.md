@@ -63,7 +63,7 @@ Classic Docker Container, a simple script of creation available in scripts/docke
 
 ## database 
 simple H2 in memory database, using ***Slick*** plugin to avoid writing hardcoded SQL queries, which can simplify the migration from a db provider to another 
-
+On the Branch ***postgres-migration***, a set up is made to connect to a Postgres database hosted on amazon RDS (This has been made after the deliveries of the test and for learning purposes)
 ## UI 
 the code is in different github repo 
 https://github.com/fourat2018/property-manager-ui
